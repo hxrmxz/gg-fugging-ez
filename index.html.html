@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Aesthetic Retro Exam Difficulty Scoresheet</title>
+<style>
+@page { margin: 0; }
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { background-color: #f1ecf7; }
+@media (prefers-color-scheme: dark) {
+    html { background-color: #1a1622; }
+}
+body { 
+    padding: 24px 0;
+    margin: 0 auto;
+    max-width: 900px !important;
+    border: none !important;
+    background: transparent !important; 
+    font-family: 'Courier New', Courier, monospace, sans-serif;
+}
+.page {
+    height: 297mm;
+    margin: 0 auto 12px auto;
+    padding: 16mm 16mm 10mm 16mm;
+    background-color: #fdfbf7;
+    border: 3px solid #2d2338;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 0px #2d2338;
+}
+@media screen and (max-width: 600px) {
+    body { padding: 8px 0; }
+    .page { margin: 0 auto; border: 2px solid #2d2338; padding: 10px; border-radius: 8px; }
+}
+.page-content {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.page-footer {
+    flex-shrink: 0;
+    margin-top: auto;
+    padding-top: 2mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8.5pt;
+    font-weight: bold;
+    color: #5c4b6e;
+    border-top: 2px dashed #d3c4e3;
+}
+
+/* Retro UI Elements */
+.retro-header {
+    background-color: #e8d7f5;
+    border: 2.5px solid #2d2338;
+    border-radius: 12px;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 3px 3px 0px #2d2338;
+}
+.retro-title {
+    font-size: 16pt;
+    font-weight: 900;
+    color: #3a225d;
+    text-shadow: 1px 1px 0px #ffffff;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+.pixel-badge {
+    background-color: #ffc8dd;
+    border: 2px solid #2d2338;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 9pt;
+    font-weight: bold;
+    color: #2d2338;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.kpi-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+.kpi-card {
+    background-color: #ffffff;
+    border: 2px solid #2d2338;
+    border-radius: 8px;
+    padding: 8px 12px;
+    box-shadow: 2px 2px 0px #2d2338;
+}
+.kpi-card.hardest { background-color: #ffcad4; }
+.kpi-card.easiest { background-color: #b9fbc0; }
+.kpi-card.overall { background-color: #e8d7f5; }
+
+.kpi-title {
+    font-size: 7.5pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #4a3e56;
+    margin-bottom: 2px;
+}
+.kpi-value {
+    font-size: 14pt;
+    font-weight: 900;
+    color: #2d2338;
+}
+.kpi-sub {
+    font-size: 7pt;
+    color: #6b587b;
+    margin-top: 1px;
+}
+
+/* Retro Table */
+.table-wrapper {
+    background-color: #ffffff;
+    border: 2.5px solid #2d2338;
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 3px 3px 0px #2d2338;
+}
+table.retro-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 8.5pt;
+}
+table.retro-table th {
+    background-color: #f3c4fb;
+    color: #2d2338;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 6px 4px;
+    border-bottom: 2px solid #2d2338;
+    border-right: 1px solid #d3c4e3;
+    text-align: center;
+}
+table.retro-table th:first-child { border-top-left-radius: 6px; text-align: left; padding-left: 8px; }
+table.retro-table th:last-child { border-top-right-radius: 6px; border-right: none; }
+
+table.retro-table td {
+    padding: 5px 4px;
+    border-bottom: 1px solid #e2d6ed;
+    border-right: 1px solid #f0e6f7;
+    text-align: center;
+    color: #2d2338;
+    font-weight: 600;
+}
+table.retro-table td:first-child { text-align: left; font-weight: 800; padding-left: 8px; background-color: #faf5ff; }
+table.retro-table td:last-child { border-right: none; }
+table.retro-table tr:last-child td { border-bottom: none; }
+
+/* Custom Highlight Columns */
+.col-avg { background-color: #e8e8e8 !important; }
+.col-final { background-color: #fff1e6 !important; font-weight: 800 !important; }
+
+/* Health/Difficulty Bar */
+.hp-bar-outer {
+    width: 100%;
+    height: 12px;
+    background-color: #e2d6ed;
+    border: 1.5px solid #2d2338;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+}
+.hp-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, #b9fbc0 0%, #ffcfd2 60%, #f72585 100%);
+    border-right: 1px solid #2d2338;
+}
+
+/* Charts Section */
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.chart-box {
+    background-color: #ffffff;
+    border: 2.5px solid #2d2338;
+    border-radius: 10px;
+    padding: 8px 12px;
+    box-shadow: 3px 3px 0px #2d2338;
+}
+.chart-title {
+    font-size: 8.5pt;
+    font-weight: 900;
+    color: #3a225d;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media print {
+    body { padding: 0; background: none; }
+    .page { margin: 0; border: 2.5px solid #2d2338; height: 297mm; break-after: page; page-break-after: always; }
+}
+[contenteditable]:focus { outline: none; }
+</style>
+</head>
+<body>
+<div contenteditable="true">
+<section class="page">
+    <div class="page-content">
+        
+        <!-- Header Banner -->
+        <div class="retro-header">
+            <div>
+                <h1 class="retro-title">🎮 SURVEY ON EXAM DIFFICULTY</h1>
+                <div style="font-size: 8pt; color: #5c4b6e; font-weight: bold; margin-top: 2px;">
+                    MODE: GGEZ • DATASET: YOUR RATINGS
+                </div>
+            </div>
+            <div class="pixel-badge">
+                <span>★ EXAM COMPLETE!</span>
+            </div>
+        </div>
+
+        <!-- KPI Stat Cards -->
+        <div class="kpi-container">
+            <div class="kpi-card hardest">
+                <div class="kpi-title">🔥 Hardest Exam >:(</div>
+                <div class="kpi-value">Science</div>
+                <div class="kpi-sub">Scaled Score: 100.0 (Raw: 61.33)</div>
+            </div>
+            <div class="kpi-card easiest">
+                <div class="kpi-title">🌱 Easiest Exam :></div>
+                <div class="kpi-value">ESP</div>
+                <div class="kpi-sub">Scaled Score: 0.0 (Raw: 16.67)</div>
+            </div>
+            <div class="kpi-card overall">
+                <div class="kpi-title">📊 Overall Average</div>
+                <div class="kpi-value">34.61</div>
+                <div class="kpi-sub">Across 8 subjects, 6 Ratings</div>
+            </div>
+        </div>
+
+        <!-- Main Score Dataset Table -->
+        <div class="table-wrapper">
+            <table class="retro-table">
+                <thead>
+                    <tr>
+                        <th>SUBJECT</th>
+                        <th>ALOE</th>
+                        <th>GGEZ</th>
+                        <th>RICE</th>
+                        <th>THIRiTY</th>
+                        <th>HUILUOLEI</th>
+                        <th>CATHEXIS</th>
+                        <th class="col-avg">RAW AVG</th>
+                        <th class="col-final">FINAL SCORE</th>
+                        <th style="width: 110px;">DIFFICULTY METER (GG FUGGIN EZ)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ESP</td>
+                        <td>20</td>
+                        <td>10</td>
+                        <td>25</td>
+                        <td>20</td>
+                        <td>5</td>
+                        <td>20</td>
+                        <td class="col-avg">16.67</td>
+                        <td class="col-final">0.00 (A+)</td>
+                        <td>
+                            <div class="hp-bar-outer"><div class="hp-bar-inner" style="width: 0%;"></div></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Math</td>
+                        <td>53</td>
+                        <td>20</td>
+                        <td>30</td>
+                        <td>40</td>
+                        <td>15</td>
+                        <td>45</td>
+                        <td class="col-avg">33.83</td>
+                        <td class="col-final">38.42 (D-)</td>
+                        <td>
+                            <div class="hp-bar-outer"><div class="hp-bar-inner" style="width: 38.42%;"></div></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>MAPEH</td>
+                        <td>54</td>
+                        <td>30</td>
+                        <td>75</td>
+                        <td>56</td>
+                        <td>30</td>
+                        <td>20</td>
+                        <td class="col-avg">44.17</td>
+                        <td class="col-final">61.58 (F)</td>
+                        <td>
+                            <div class="hp-bar-outer"><div class="hp-bar-inner" style="width: 61.58%;"></div></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Filipino</td>
+                        <td>49</td>
+                        <td>20</td>
+                        <td>50</td>
+                        <td>49</td>
+                        <td>10</td>
+                        <td>15</td>
+                        <td class="col-avg">32.17</td>
+                        <td class="col-final">34.71 (D)</td>
+                        <td>
+                            <div class="hp-bar-outer"><div class="hp-bar-inner" style="width: 34.71%;"></div></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>English</td>
+                        <td>56</td>
+                        <td>30</td>
+                        <td>30</td>
+                        <td>50</td>
+                        <td>50</td>
+                        <td>15</td>
+                        <td class="col-avg">38.50</td>
+                        <td class="col-final">48.88 (F)</td>
+                        <td>
+                            <div class="hp-bar-outer"><div class="hp-bar-inner" style="width: 48.88%;"></div></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>AP</td>
+                        <td>30</td>
+                        <td>15</td>
+                        <td>20</td>
+                        <td>30</td>
+                        <td>15</td>
+                        <td>15</td>
+                        <td class="col-avg">20.83</td>
+                        <td class="col-final">9.31 (A-)</td>
+                        <td>
+                            <div class="hp-bar-outer"><div class="hp-bar-inner" style="width: 9.31%;"></div></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Science</td>
+                        <td>68</td>
+                        <td>65</td>
+                        <td>50</td>
+                        <td>80</td>
+                        <td>35</td>
+                        <td>70</td>
+                        <td class="col-avg">61.33</td>
+                        <td class="col-final">100.00 (F)</td>
+                        <td>
+                            <div class="hp-bar-outer"><div class="hp-bar-inner" style="width: 100%;"></div></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>TLE</td>
+                        <td>27</td>
+                        <td>20</td>
+                        <td>40</td>
+                        <td>37</td>
+                        <td>20</td>
+                        <td>30</td>
+                        <td class="col-avg">29.00</td>
+                        <td class="col-final">27.61 (C)</td>
+                        <td>
+                            <div class="hp-bar-outer"><div class="hp-bar-inner" style="width: 27.61%;"></div></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Visual Analytics Charts -->
+        <div class="charts-grid">
+            <!-- Final Scaled Scores Chart -->
+            <div class="chart-box">
+                <div class="chart-title">
+                    <span>🏆 Scaled Scores (0-100)</span>
+                    <span style="font-size: 7pt; color: #7a688d;">BAZOVVY MINIMUM-MAX NORM</span>
+                </div>
+                <svg viewBox="0 0 320 120" style="width: 100%; height: 110px;" role="img" aria-label="Final Scores Bar Chart">
+                    <!-- Grid Lines -->
+                    <line x1="30" y1="20" x2="310" y2="20" stroke="#f0e6f7" stroke-width="1"/>
+                    <line x1="30" y1="50" x2="310" y2="50" stroke="#f0e6f7" stroke-width="1"/>
+                    <line x1="30" y1="80" x2="310" y2="80" stroke="#f0e6f7" stroke-width="1"/>
+                    <line x1="30" y1="100" x2="310" y2="100" stroke="#2d2338" stroke-width="1.5"/>
+
+                    <!-- Y-Axis Labels -->
+                    <text x="22" y="23" font-size="6.5" font-weight="bold" fill="#6b587b" text-anchor="end">100</text>
+                    <text x="22" y="53" font-size="6.5" font-weight="bold" fill="#6b587b" text-anchor="end">60</text>
+                    <text x="22" y="83" font-size="6.5" font-weight="bold" fill="#6b587b" text-anchor="end">20</text>
+
+                    <!-- Bars & X Labels -->
+                    <!-- ESP: 0 -->
+                    <rect x="38" y="100" width="22" height="0" fill="#b9fbc0" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="49" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">ESP</text>
+
+                    <!-- Math: 38.42 -->
+                    <rect x="72" y="69.2" width="22" height="30.8" fill="#ffcfd2" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="83" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">Math</text>
+
+                    <!-- MAPEH: 61.58 -->
+                    <rect x="106" y="50.7" width="22" height="49.3" fill="#f72585" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="117" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">MAPEH</text>
+
+                    <!-- Filipino: 34.71 -->
+                    <rect x="140" y="72.2" width="22" height="27.8" fill="#ffcfd2" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="151" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">Filip</text>
+
+                    <!-- English: 48.88 -->
+                    <rect x="174" y="60.9" width="22" height="39.1" fill="#f72585" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="185" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">Eng</text>
+
+                    <!-- AP: 9.31 -->
+                    <rect x="208" y="92.5" width="22" height="7.5" fill="#b9fbc0" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="219" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">AP</text>
+
+                    <!-- Science: 100 -->
+                    <rect x="242" y="20" width="22" height="80" fill="#7209b7" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="253" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">Sci</text>
+
+                    <!-- TLE: 27.61 -->
+                    <rect x="276" y="77.9" width="22" height="22.1" fill="#ffcfd2" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="287" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">TLE</text>
+                </svg>
+            </div>
+
+            <!-- Friend Harshness Distribution Chart -->
+            <div class="chart-box">
+                <div class="chart-title">
+                    <span>👑 HOW YOU STRUGGLED</span>
+                    <span style="font-size: 7pt; color: #7a688d;">AVG GIVEN</span>
+                </div>
+                <svg viewBox="0 0 320 120" style="width: 100%; height: 110px;" role="img" aria-label="Friend Average Ratings">
+                    <line x1="30" y1="20" x2="310" y2="20" stroke="#f0e6f7" stroke-width="1"/>
+                    <line x1="30" y1="50" x2="310" y2="50" stroke="#f0e6f7" stroke-width="1"/>
+                    <line x1="30" y1="80" x2="310" y2="80" stroke="#f0e6f7" stroke-width="1"/>
+                    <line x1="30" y1="100" x2="310" y2="100" stroke="#2d2338" stroke-width="1.5"/>
+
+                    <text x="22" y="23" font-size="6.5" font-weight="bold" fill="#6b587b" text-anchor="end">60</text>
+                    <text x="22" y="53" font-size="6.5" font-weight="bold" fill="#6b587b" text-anchor="end">40</text>
+                    <text x="22" y="83" font-size="6.5" font-weight="bold" fill="#6b587b" text-anchor="end">20</text>
+
+                    <!-- Aloe (47.0) -->
+                    <rect x="42" y="37.3" width="26" height="62.7" fill="#e8d7f5" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="55" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">Aloe</text>
+
+                    <!-- Ggez (26.25) - Harshest -->
+                    <rect x="86" y="65" width="26" height="35" fill="#f72585" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="99" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">Ggez</text>
+
+                    <!-- Rice (42.5) -->
+                    <rect x="130" y="43.3" width="26" height="56.7" fill="#e8d7f5" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="143" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">Rice</text>
+
+                    <!-- Thirty (42.25) -->
+                    <rect x="174" y="43.6" width="26" height="56.4" fill="#e8d7f5" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="187" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">Thirity</text>
+
+                    <!-- Huiluolei (20.0) - Harshest -->
+                    <rect x="218" y="73.3" width="26" height="26.7" fill="#f72585" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="231" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">Huiluolei</text>
+
+                    <!-- Cathexis (28.75) -->
+                    <rect x="262" y="61.6" width="26" height="38.4" fill="#ffcfd2" stroke="#2d2338" stroke-width="1" rx="2"/>
+                    <text x="275" y="112" font-size="6" font-weight="bold" fill="#2d2338" text-anchor="middle">Cathexis</text>
+                </svg>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+        <span>This is not AI bruhH <br>Shout out to everyone on here
+        </span>
+        <span>Bazovvy Minimum-Max Formula: <br>=(RawAvg-16.67)/(61.33-16.67)*100</span>
+        <span>Page 1 of 1</span>
+    </footer>
+</section>
+</div>
+</body>
+</html>
